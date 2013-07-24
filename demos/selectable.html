@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href='../fullcalendar/fullcalendar.css' rel='stylesheet' />
+<link href='../fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+<!--<script src='../jquery/jquery-1.9.1.min.js'></script>-->
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<!--<script src='../jquery/jquery-ui-1.10.2.custom.min.js'></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js"></script>
+    
+
+<!--<script src='../fullcalendar/fullcalendar.min.js'></script>-->
+<script src='../fullcalendar/fullcalendar.js'></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'list,month,agendaWeek,agendaDay'
+            },
+            buttonText: {
+                list: 'list'
+            },
+            viewChanged: function (currentView, oldView) {
+                //console.log('view changed event is triggered!');
+            },
+            selectable: true,
+            selectHelper: true,
+            select: function (start, end, allDay) {
+                var title = prompt('Event Title:');
+                if (title) {
+                    calendar.fullCalendar('renderEvent',
+						{
+						    title: title,
+						    start: start,
+						    end: end,
+						    allDay: allDay
+						},
+						true // make the event "stick"
+					);
+                }
+                calendar.fullCalendar('unselect');
+            },
+            eventClick: function (calEvent, jsEvent, view) {
+
+                var str = 'Event: ' + calEvent.title +
+                          '\nCoordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY +
+                          '\nView: ' + view.name
+
+                console.log(str);
+				
+				alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+                var $bubble = $('#bubblePopPane').show();
+                //$bubble.offset({ left: jsEvent.pageX, top: jsEvent.pageY });
+                // change the border color just for fun
+                $(this).css('border-color', 'red');
+
+                $bubble.find('p._message').text(calEvent.title);
+
+
+            },
+            editable: true,
+            events: [
+                {
+                    title: 'Meeting',
+                    start: new Date(y, m, d, 10, 30),
+                    allDay: false
+                }
+
+            /*
+            {
+            title: 'All Day Event',
+            start: new Date(y, m, 1)
+            },
+            {
+            title: 'Long Event',
+            start: new Date(y, m, d-5),
+            end: new Date(y, m, d-2)
+            },
+            {
+            id: 999,
+            title: 'Repeating Event',
+            start: new Date(y, m, d-3, 16, 0),
+            allDay: false
+            },
+            {
+            id: 999,
+            title: 'Repeating Event',
+            start: new Date(y, m, d+4, 16, 0),
+            allDay: false
+            },
+            {
+            title: 'Lunch',
+            start: new Date(y, m, d, 12, 0),
+            end: new Date(y, m, d, 14, 0),
+            allDay: false
+            },
+            {
+            title: 'Birthday Party',
+            start: new Date(y, m, d+1, 19, 0),
+            end: new Date(y, m, d+1, 22, 30),
+            allDay: false
+            },
+            {
+            title: 'Click for Google',
+            start: new Date(y, m, 28),
+            end: new Date(y, m, 29),
+            url: 'http://google.com/'
+            }
+            */
+			]
+        });
+        var evt = {
+            title: 'dynamically added 1',
+            start: new Date(y, m, d, 12, 30),
+            allDay: false
+        };
+
+        calendar.fullCalendar('renderEvent', evt, true);
+
+        $('span.icon-19.close.closePop._close').click(function () {
+            $('#bubblePopPane').hide();
+        });
+
+    });
+
+</script>
+<style>
+
+	body {
+		margin-top: 40px;
+		text-align: center;
+		font-size: 14px;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		}
+
+	#calendar {
+		width: 800px;
+		margin: 0 auto;
+		}
+
+    #bubblePopPane
+    {
+        background-color: #fff;
+        border-color: #bbb;
+        border-style: solid;
+        border-width: 1px;
+        color: #222;
+        font-size: 12px;
+        padding: 15px 15px 14px;
+        max-width: 520px;
+        min-width: 80px;
+        min-height: 30px;
+        text-shadow: 0 1px 0 #fff;
+        position: absolute;
+        z-index: 2000;
+        box-shadow: rgba(0,0,0,.5) 0 5px 20px;
+    }
+    
+    .icon-19.bi-trash {
+        background-position: -70px 0;
+    }
+    .icon-19.edit {
+        background-position: -51px -323px;
+    }
+    
+    #modulePreviewPopup.up tip, #bubblePopPane.up .tip, #notificationPopup.up .tip {
+        margin-left: -12px;
+        position: absolute;
+        bottom: -19px;
+        left: 50%;
+    }
+    .up .icon-static-19.tip {
+        background-position: -13px -494px;
+    }
+    
+    #bubblePopPane .closePop {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .btns:last-child, .btns-right:last-child, .btns-center:last-child {
+        margin-bottom: 0;
+    }
+    .btns-right {
+        text-align: right;
+    }
+    
+    .icon-19.delete, .icon-19.close {
+        background-position: -51px -304px;
+        cursor: pointer;
+    }
+    .icon-19, .icon-static-19, .icon-sn-19, .icon-co-19 {
+        height: 19px;
+        padding-left: 19px;
+    }
+    .icon-13, .icon-static-13, .icon-19, .icon-static-19, .icon-30, .icon-static-30 {
+        background-image: url(../images/icons.png);
+    }
+
+</style>
+</head>
+<body>
+<div id='calendar'></div>
+<div id="bubblePopPane" class="animated fadeInDown up" style="top: 297px; left: 811px;display:none;">
+	<div class="_content content">
+		<div class="header">
+			<span class="icon-19 close closePop _close"></span>
+			<h4>Scheduled Message</h4>
+		</div>
+		<div class="_calendarEventPreview publisherPopPane content rb-a-2 message">
+			<h4>Sending to:</h4>
+			<p class="_avatars">
+					<img src="https://d2zfw9brtww0cv.cloudfront.net/http%3A%2F%2Fhootsuite.com%2Fimages%2Ficons%2Fno-avatar-linkedin.png" class="_jsTooltip avatar" title="Henry He">
+			</p>
+			<h4>Message:</h4>
+			<p class="_message">
+				scheduled for Friday
+			</p>
+			<h4>Scheduled to send:</h4>
+			<p class="_sendDate">Friday, July 19, 2013 at 7:35pm</p>
+		</div>
+		<div class="_tools btns-right">
+				<span class="_delete _jsTooltip btn-lite-sta btn-icon-19" title="Delete">
+					<span class="icon-19 bi-trash"></span>
+				</span>
+				<span class="_edit btn-lite-sta btn-icon-19 _jsTooltip" title="Edit">
+					<span class="icon-19 edit"></span>
+				</span>
+		</div>
+	</div>
+	<span class="icon-static-19 tip"></span>
+</div>
+</body>
+</html>
